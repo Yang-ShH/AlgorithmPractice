@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "两数相加", "两数相加.csproj", "{96B724D2-BF68-412D-98F5-E322972AE51A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96B724D2-BF68-412D-98F5-E322972AE51A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B724D2-BF68-412D-98F5-E322972AE51A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B724D2-BF68-412D-98F5-E322972AE51A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B724D2-BF68-412D-98F5-E322972AE51A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9482F30B-D5D4-4530-82D7-6BC7C77EA159}
+	EndGlobalSection
+EndGlobal
