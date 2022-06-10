@@ -40,8 +40,9 @@ namespace HRD
         //生成所有按钮
         void GenerateAllButtons()
         {
-            int x0 = (65 * colCount) > Width ? 60 : (Width - (65 * colCount)) / 2;
-            int y0 = (65 * rowCount) > Height ? 60 : (Height - 60 - (65 * rowCount)) / 2;
+            var panel1Width = this.panel1.Width;
+            int x0 = (65 * colCount) > (Width - panel1Width) ? 110 : (Width - panel1Width - (65 * colCount)) / 2 + panel1Width;
+            int y0 = (65 * rowCount) > Height ? 60 : (Height - (65 * rowCount)) / 2;
             int sideLength = Math.Min((Width - (2 * x0)) / colCount, (Height - (2 * y0)) / rowCount);
             sideLength = sideLength > 65 ? 65 : sideLength;
             int w = sideLength;
