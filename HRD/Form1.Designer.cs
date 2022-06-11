@@ -43,7 +43,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "重置";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1Click);
             // 
             // panel1
             // 
@@ -64,7 +64,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "数字华容道";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.Form1Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

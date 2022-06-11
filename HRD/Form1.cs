@@ -7,49 +7,48 @@ namespace HRD
             InitializeComponent();
         }
 
-        static int rowCount = Program.GetConfig<int>("rowCount");
-        static int colCount = Program.GetConfig<int>("colCount");
+        private static readonly int RowCount = Program.GetConfig<int>("rowCount");
+        private static readonly int ColCount = Program.GetConfig<int>("colCount");
+        private readonly Button[,] _buttons = new Button[RowCount, ColCount];
 
-        Button[,] buttons = new Button[rowCount, colCount];
 
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1Load(object sender, EventArgs e)
         {
             //产生所有按钮
             GenerateAllButtons();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1Click(object sender, EventArgs e)
         {
             Shuffle();
         }
 
         //打乱顺序
-        void Shuffle()
+        private void Shuffle()
         {
-            for (int r = 0; r < rowCount; r++)
-                for (int c = 0; c < colCount; c++)
+            for (int r = 0; r < RowCount; r++)
+                for (int c = 0; c < ColCount; c++)
                 {
                     var num = Program.GetConfig<int>($"matrix:{r}:{c}");
-                    buttons[r, c].Text = num.ToString();
-                    buttons[r,c].Visible = num != 0;
+                    _buttons[r, c].Text = num.ToString();
+                    _buttons[r,c].Visible = num != 0;
                 }
         }
 
 
         //生成所有按钮
-        void GenerateAllButtons()
+        private void GenerateAllButtons()
         {
             var panel1Width = this.panel1.Width;
-            int x0 = (65 * colCount) > (Width - panel1Width) ? 110 : (Width - panel1Width - (65 * colCount)) / 2 + panel1Width;
-            int y0 = (65 * rowCount) > Height ? 60 : (Height - (65 * rowCount)) / 2;
-            int sideLength = Math.Min((Width - (2 * x0)) / colCount, (Height - (2 * y0)) / rowCount);
-            sideLength = sideLength > 65 ? 65 : sideLength;
-            int w = sideLength;
-            int h = sideLength;
+            int x0 = (65 * ColCount) > (Width - panel1Width) ? 110 : (Width - panel1Width - (65 * ColCount)) / 2 + panel1Width;
+            int y0 = (65 * RowCount) > Height ? 60 : (Height - (65 * RowCount)) / 2;
+            //int sideLength = Math.Min((Width - (2 * x0)) / ColCount, (Height - (2 * y0)) / RowCount);
+            //sideLength = sideLength > 65 ? 65 : sideLength;
+            int w = 65;
+            int h = 65;
             
-            for (int r = 0; r < rowCount; r++)
-                for (int c = 0; c < colCount; c++)
+            for (int r = 0; r < RowCount; r++)
+                for (int c = 0; c < ColCount; c++)
                 {
                     var num = Program.GetConfig<int>($"matrix:{r}:{c}");
                     Button btn = new Button();
@@ -59,31 +58,26 @@ namespace HRD
                     btn.Width = w;
                     btn.Height = h;
                     btn.Visible = num != 0;
-                    btn.Tag = r * colCount + c;//表示它所在的行列位置
+                    btn.Margin = new Padding(0, 0, 0, 0);
+                    btn.Tag = r * ColCount + c;//表示它所在的行列位置
                     //注册事件
-                    btn.Click += new EventHandler(btn_Click);
-                    buttons[r, c] = btn;
+                    btn.Click += ButtonClick;
+                    _buttons[r, c] = btn;
                     this.Controls.Add(btn);
                 }
         }
 
 
         //交换两个按钮
-        void Swap(Button btna, Button btnb)
+        private static void Swap(Button btnA, Button btnB)
         {
-            string t = btna.Text;
-            btna.Text = btnb.Text;
-            btnb.Text = t;
-
-
-            bool v = btna.Visible;
-            btna.Visible = btnb.Visible;
-            btnb.Visible = v;
+            (btnA.Text, btnB.Text) = (btnB.Text, btnA.Text);
+            (btnA.Visible, btnB.Visible) = (btnB.Visible, btnA.Visible);
         }
 
 
         //按钮点击事件处理
-        void btn_Click(object sender, EventArgs e)
+        private void ButtonClick(object sender, EventArgs e)
         {
             Button btn = (Button)sender;//当前点中按钮
             Button blank = FindHiddenButton();//空白按钮
@@ -103,14 +97,14 @@ namespace HRD
 
 
         //查找要隐藏的按钮
-        Button FindHiddenButton()
+        private Button FindHiddenButton()
         {
-            for (int r = 0; r < rowCount; r++)
-                for (int c = 0; c < colCount; c++)
+            for (int r = 0; r < RowCount; r++)
+                for (int c = 0; c < ColCount; c++)
                 {
-                    if (!buttons[r, c].Visible)
+                    if (!_buttons[r, c].Visible)
                     {
-                        return buttons[r, c];
+                        return _buttons[r, c];
                     }
                 }
             return new Button();
@@ -118,12 +112,12 @@ namespace HRD
 
 
         //判断是否相邻
-        bool IsNeighbor(Button btnA, Button btnB)
+        private static bool IsNeighbor(Button btnA, Button btnB)
         {
             int a = (int)btnA.Tag; //Tag中记录是行列位置
             int b = (int)btnB.Tag;
-            int r1 = a / colCount, c1 = a % colCount;
-            int r2 = b / colCount, c2 = b % colCount;
+            int r1 = a / ColCount, c1 = a % ColCount;
+            int r2 = b / ColCount, c2 = b % ColCount;
 
             if (r1 == r2 && (c1 == c2 - 1 || c1 == c2 + 1) //左右相邻
                 || c1 == c2 && (r1 == r2 - 1 || r1 == r2 + 1))
@@ -133,12 +127,12 @@ namespace HRD
 
 
         //检查是否完成
-        bool ResultIsOk()
+        private bool ResultIsOk()
         {
-            for (int r = 0; r < rowCount; r++)
-                for (int c = 0; c < colCount; c++)
+            for (int r = 0; r < RowCount; r++)
+                for (int c = 0; c < ColCount; c++)
                 {
-                    if (buttons[r, c].Text != (r * colCount + c + 1).ToString())
+                    if (_buttons[r, c].Text != (r * ColCount + c + 1).ToString())
                     {
                         return false;
                     }
