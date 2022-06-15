@@ -19,7 +19,7 @@ namespace HRD
 
         public static T GetConfig<T>(string key)
         {
-            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json",false, true);
             IConfigurationRoot configurationRoot = builder.Build();
             var value = configurationRoot.GetValue<T>(key);
             return value;
