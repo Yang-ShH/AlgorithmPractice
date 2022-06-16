@@ -92,8 +92,7 @@ namespace HRD
                     btn.Width = w;
                     btn.Height = h;
                     btn.Visible = num != 0;
-                    btn.BackColor = Color.LightSlateGray;
-                    btn.Margin = new Padding(0, 0, 0, 0);
+                    //btn.Margin = new Padding(0, 0, 0, 0);
                     btn.Tag = r * ColCount + c;//表示它所在的行列位置
                     //注册事件
                     btn.Click += ButtonClick;
@@ -110,14 +109,6 @@ namespace HRD
             (btnA.Visible, btnB.Visible) = (btnB.Visible, btnA.Visible);
             btnA.Refresh();
             btnB.Refresh();
-        }
-
-        private static void Swap(int aX, int aY, int bX, int By)
-        {
-            var btnA = _buttons[aX, aY];
-            var btnB = _buttons[bX, By];
-            (btnA.Text, btnB.Text) = (btnB.Text, btnA.Text);
-            (btnA.Visible, btnB.Visible) = (btnB.Visible, btnA.Visible);
         }
 
 
@@ -327,14 +318,14 @@ namespace HRD
                 return result;
             });
             RouteNum = await routeString;
-            sw.Stop();
-            textBox2.Text = $"计算耗时：{sw.ElapsedMilliseconds} 毫秒\r\n";
             var route = RouteNum.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
-            textBox2.Text += $"共需 {route.Length} 步";
             OutPutJson.stepCount = route.Length;
             OutPutJson.duration = (int)(sw.ElapsedMilliseconds / 1000);
             textBox1.Text = OutPutJson.stepList;
             OutPutJsonResult();
+            sw.Stop();
+            textBox2.Text = $"计算耗时：{sw.ElapsedMilliseconds} 毫秒\r\n";
+            textBox2.Text += $"共需 {route.Length} 步";
         }
 
         private string CalcOneNodeRoute(CalcPath map, int node)

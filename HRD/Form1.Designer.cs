@@ -64,7 +64,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(100, 695);
+            this.panel1.Size = new System.Drawing.Size(100, 743);
             this.panel1.TabIndex = 1;
             // 
             // textBox2
@@ -72,7 +72,7 @@
             this.textBox2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.textBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox2.Location = new System.Drawing.Point(0, 265);
+            this.textBox2.Location = new System.Drawing.Point(0, 313);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 191);
@@ -107,7 +107,7 @@
             this.textBox1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox1.Location = new System.Drawing.Point(0, 456);
+            this.textBox1.Location = new System.Drawing.Point(0, 504);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -143,7 +143,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(698, 695);
+            this.ClientSize = new System.Drawing.Size(1011, 743);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "数字华容道";
