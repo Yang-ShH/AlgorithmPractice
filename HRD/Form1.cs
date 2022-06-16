@@ -7,21 +7,36 @@ namespace HRD
 {
     public partial class Form1 : Form
     {
+        public static MapJson OutPutJson = Program.GetConfig();
+        public static readonly int RowCount = OutPutJson.rowCount;
+        public static readonly int ColCount = OutPutJson.colCount;
+        //public static readonly int RowCount = Program.GetConfig<int>("rowCount");
+        //public static readonly int ColCount = Program.GetConfig<int>("colCount");
+        public static Button[,] _buttons = new Button[RowCount, ColCount];
+        public static List<NodeInfo> Map = new();
+        public static string RouteNum = string.Empty;
+        
         public Form1()
         {
             InitializeComponent();
+            
+            //this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.pMouseWheel);
         }
 
-        public static readonly int RowCount = Program.GetConfig<int>("rowCount");
-        public static readonly int ColCount = Program.GetConfig<int>("colCount");
-        public static Button[,] _buttons = new Button[RowCount, ColCount];
-        public static List<NodeInfo> Map = new();
-        public static MapJson OutPutJson = new MapJson()
-        {
-            rowCount = RowCount,
-            colCount = ColCount,
-            matrix = Program.GetConfig<int[,]>("matrix")
-        };
+        //private void pMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        //{
+        //    //MessageBox.Show("滚动事件已被捕捉");
+        //    Size t = new Size(0, 0); //t的属性为滚轮滚动的变化值可以结合控件的尺寸(+t)，实现滚轮随放。
+        //    t.Width += e.Delta;
+        //    t.Height += e.Delta;
+        //    foreach (var button in _buttons)
+        //    {
+        //        button.Size = t;
+        //    }
+
+        //    Refresh();
+        //}
+
 
         private void Form1Load(object sender, EventArgs e)
         {
@@ -32,8 +47,9 @@ namespace HRD
         private void Button1Click(object sender, EventArgs e)
         {
             Shuffle();
-            textBox1.Text = String.Empty;
-            textBox2.Text = String.Empty;
+            textBox1.Text = string.Empty;
+            textBox2.Text = string.Empty;
+            RouteNum = string.Empty;
         }
 
         //打乱顺序
@@ -42,7 +58,9 @@ namespace HRD
             for (int r = 0; r < RowCount; r++)
                 for (int c = 0; c < ColCount; c++)
                 {
-                    var num = Program.GetConfig<int>($"matrix:{r}:{c}");
+                    //var num = Program.GetConfig<int>($"matrix:{r}:{c}");
+                    var num = OutPutJson.matrix[r,c];
+
                     _buttons[r, c].Text = num.ToString();
                     _buttons[r, c].Visible = num != 0;
                 }
@@ -66,7 +84,7 @@ namespace HRD
             for (int r = 0; r < RowCount; r++)
                 for (int c = 0; c < ColCount; c++)
                 {
-                    var num = Program.GetConfig<int>($"matrix:{r}:{c}");
+                    var num = OutPutJson.matrix[r, c];
                     Button btn = new Button();
                     btn.Text = num.ToString();
                     btn.Top = y0 + r * h;
@@ -74,6 +92,7 @@ namespace HRD
                     btn.Width = w;
                     btn.Height = h;
                     btn.Visible = num != 0;
+                    btn.BackColor = Color.LightSlateGray;
                     btn.Margin = new Padding(0, 0, 0, 0);
                     btn.Tag = r * ColCount + c;//表示它所在的行列位置
                     //注册事件
@@ -198,10 +217,12 @@ namespace HRD
                 if (inverse % 2 == 0)
                 {
                     MessageBox.Show("该华容道有解！");
+                    OutPutJson.recoverable = true;
                 }
                 else
                 {
                     MessageBox.Show("该华容道无解！");
+                    OutPutJson.recoverable = false;
                 }
             }
         }
@@ -255,6 +276,8 @@ namespace HRD
 
         private async void Button3Click(object sender, EventArgs e)
         {
+            OutPutJson.stepList = string.Empty;
+            textBox2.Text = "计算中...";
             var sw = Stopwatch.StartNew();
 
             var routeString = Task.Run(() =>
@@ -303,13 +326,15 @@ namespace HRD
                 }
                 return result;
             });
-
-            textBox1.Text = await routeString;
+            RouteNum = await routeString;
             sw.Stop();
             textBox2.Text = $"计算耗时：{sw.ElapsedMilliseconds} 毫秒\r\n";
-            var route = textBox1.Text.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
+            var route = RouteNum.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
             textBox2.Text += $"共需 {route.Length} 步";
-            //Debug.WriteLine(sw.ElapsedMilliseconds);
+            OutPutJson.stepCount = route.Length;
+            OutPutJson.duration = (int)(sw.ElapsedMilliseconds / 1000);
+            textBox1.Text = OutPutJson.stepList;
+            OutPutJsonResult();
         }
 
         private string CalcOneNodeRoute(CalcPath map, int node)
@@ -332,6 +357,18 @@ namespace HRD
             return result;
         }
 
+        private void OutPutJsonResult()
+        {
+            string path = "OutPut.json";
+            if (!File.Exists(path))
+            {
+                var file = new FileStream(path, FileMode.Create, FileAccess.ReadWrite);
+                file.Close();
+            }
+
+            File.WriteAllText(path, JsonConvert.SerializeObject(OutPutJson));
+        }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
@@ -339,13 +376,20 @@ namespace HRD
 
         private void button4_Click(object sender, EventArgs e)
         {
+            var t1 = Task.Factory.StartNew(UpdateFormBtnFunc);
+        }
+
+        private delegate void UpdateFormBtn();
+
+        private void UpdateFormBtnFunc()
+        {
             var listNum = new List<int>();
             foreach (var button in _buttons)
             {
                 listNum.Add(int.Parse(button.Text));
             }
             var map = new CalcPath(listNum, RowCount, ColCount);
-            var route = textBox1.Text.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
+            var route = RouteNum.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
             foreach (var item in route)
             {
                 var num = Convert.ToInt32(item);
@@ -357,10 +401,11 @@ namespace HRD
                 (spaceNode.X, currentNode.X) = (currentNode.X, spaceNode.X);
                 (spaceNode.Y, currentNode.Y) = (currentNode.Y, spaceNode.Y);
                 currentBtn.Focus();
-                Thread.Sleep(7);
+                Thread.Sleep(2);
             }
 
-            MessageBox.Show("完成！");
+            textBox1.Text = "完成！";
+            //MessageBox.Show("完成！");
         }
 
         private void button5_Click(object sender, EventArgs e)
