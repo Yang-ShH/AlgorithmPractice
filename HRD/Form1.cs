@@ -53,13 +53,15 @@ namespace HRD
         private void GenerateAllButtons()
         {
             var panel1Width = this.panel1.Width;
-            var btnWidth = 30;
-            int x0 = (btnWidth * ColCount) > (Width - panel1Width) ? 110 : (Width - panel1Width - (btnWidth * ColCount)) / 2 + panel1Width;
-            int y0 = (btnWidth * RowCount) > Height ? 20 : (Height - (btnWidth * RowCount)) / 2;
+            //var btnWidth = 40;
+            //int x0 = (btnWidth * ColCount) > (Width - panel1Width) ? 110 : (Width - panel1Width - (btnWidth * ColCount)) / 2 + panel1Width;
+            //int y0 = (btnWidth * RowCount) > Height ? 20 : (Height - (btnWidth * RowCount)) / 2;
+            int x0 = 110;
+            int y0 = 10;
             //int sideLength = Math.Min((Width - (2 * x0)) / ColCount, (Height - (2 * y0)) / RowCount);
             //sideLength = sideLength > 65 ? 65 : sideLength;
-            int w = btnWidth;
-            int h = btnWidth;
+            int w = 50;
+            int h = 40;
 
             for (int r = 0; r < RowCount; r++)
                 for (int c = 0; c < ColCount; c++)
@@ -355,7 +357,7 @@ namespace HRD
                 (spaceNode.X, currentNode.X) = (currentNode.X, spaceNode.X);
                 (spaceNode.Y, currentNode.Y) = (currentNode.Y, spaceNode.Y);
                 currentBtn.Focus();
-                Thread.Sleep(10);
+                Thread.Sleep(7);
             }
 
             MessageBox.Show("Íê³É£¡");
