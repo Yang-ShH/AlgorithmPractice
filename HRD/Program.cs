@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace HRD
 {
@@ -17,12 +19,17 @@ namespace HRD
             Application.Run(new Form1());
         }
 
-        public static T GetConfig<T>(string key)
+        public static MapJson GetConfig()
         {
-            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json",false, true);
-            IConfigurationRoot configurationRoot = builder.Build();
-            var value = configurationRoot.GetValue<T>(key);
-            return value;
+            //var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json",false, true);
+            //IConfigurationRoot configurationRoot = builder.Build();
+            //var value = configurationRoot.GetValue<T>(key);
+            //return value;
+
+            StreamReader reader = File.OpenText("appsettings.json");
+            JsonTextReader jsonTextReader = new JsonTextReader(reader);
+            var mapObj = JToken.ReadFrom(jsonTextReader).ToObject<MapJson>();
+            return mapObj;
         }
     }
 }

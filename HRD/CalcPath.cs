@@ -531,6 +531,58 @@ namespace HRD
             var spaceButton = Form1._buttons[spaceNodeInfo.X, spaceNodeInfo.Y];
             if (Form1.IsNeighbor(nextButton, spaceButton))
             {
+                if (spaceNodeInfo.X < nextNodeInfo.X)
+                {
+                    if (!string.IsNullOrEmpty(Form1.OutPutJson.stepList) && Form1.OutPutJson.stepList[^2] == 'd')
+                    {
+                        var endStr = Form1.OutPutJson.stepList[^1];
+                        var endNum = endStr - '0';
+                        Form1.OutPutJson.stepList = Form1.OutPutJson.stepList.Remove(Form1.OutPutJson.stepList.Length - 1, 1) + $"{endNum + 1}";
+                    }
+                    else
+                    {
+                        Form1.OutPutJson.stepList += "d1";
+                    }
+                }
+                else if (spaceNodeInfo.X > nextNodeInfo.X)
+                {
+                    if (!string.IsNullOrEmpty(Form1.OutPutJson.stepList) && Form1.OutPutJson.stepList[^2] == 'u')
+                    {
+                        var endStr = Form1.OutPutJson.stepList[^1];
+                        var endNum = endStr - '0';
+                        Form1.OutPutJson.stepList = Form1.OutPutJson.stepList.Remove(Form1.OutPutJson.stepList.Length - 1, 1) + $"{endNum + 1}";
+                    }
+                    else
+                    {
+                        Form1.OutPutJson.stepList += "u1";
+                    }
+                }
+                else if (spaceNodeInfo.Y > nextNodeInfo.Y)
+                {
+                    if (!string.IsNullOrEmpty(Form1.OutPutJson.stepList) && Form1.OutPutJson.stepList[^2] == 'l')
+                    {
+                        var endStr = Form1.OutPutJson.stepList[^1];
+                        var endNum = endStr - '0';
+                        Form1.OutPutJson.stepList = Form1.OutPutJson.stepList.Remove(Form1.OutPutJson.stepList.Length - 1, 1) + $"{endNum + 1}";
+                    }
+                    else
+                    {
+                        Form1.OutPutJson.stepList += "l1";
+                    }
+                }
+                else if (spaceNodeInfo.Y < nextNodeInfo.Y)
+                {
+                    if (!string.IsNullOrEmpty(Form1.OutPutJson.stepList) && Form1.OutPutJson.stepList[^2] == 'r')
+                    {
+                        var endStr = Form1.OutPutJson.stepList[^1];
+                        var endNum = endStr - '0';
+                        Form1.OutPutJson.stepList = Form1.OutPutJson.stepList.Remove(Form1.OutPutJson.stepList.Length - 1, 1) + $"{endNum + 1}";
+                    }
+                    else
+                    {
+                        Form1.OutPutJson.stepList += "r1";
+                    }
+                }
                 (spaceNodeInfo.X, nextNodeInfo.X) = (nextNodeInfo.X, spaceNodeInfo.X);
                 (spaceNodeInfo.Y, nextNodeInfo.Y) = (nextNodeInfo.Y, spaceNodeInfo.Y);
                 result = nextNodeInfo.Text.ToString() + ",";
