@@ -16,6 +16,7 @@ namespace HRD
             // see https://aka.ms/applicationconfiguration.
             Application.EnableVisualStyles();
             ApplicationConfiguration.Initialize();
+            Control.CheckForIllegalCrossThreadCalls = false;
             Application.Run(new Form1());
         }
 
