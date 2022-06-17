@@ -14,7 +14,7 @@ namespace HRD
         //public static readonly int ColCount = Program.GetConfig<int>("colCount");
         public static Button[,] _buttons = new Button[RowCount, ColCount];
         public static List<NodeInfo> Map = new();
-        public static string RouteNum = string.Empty;
+        public static List<int> RouteNum = new();
         
         public Form1()
         {
@@ -49,7 +49,7 @@ namespace HRD
             Shuffle();
             textBox1.Text = string.Empty;
             textBox2.Text = string.Empty;
-            RouteNum = string.Empty;
+            RouteNum = new List<int>();
         }
 
         //打乱顺序
@@ -79,7 +79,7 @@ namespace HRD
             //int sideLength = Math.Min((Width - (2 * x0)) / ColCount, (Height - (2 * y0)) / RowCount);
             //sideLength = sideLength > 65 ? 65 : sideLength;
             int w = 50;
-            int h = 40;
+            int h = 30;
 
             for (int r = 0; r < RowCount; r++)
                 for (int c = 0; c < ColCount; c++)
@@ -273,7 +273,7 @@ namespace HRD
 
             var routeString = Task.Run(() =>
             {
-                var result = string.Empty;
+                var result = new List<int>();
                 var listNum = new List<int>();
                 foreach (var button in _buttons)
                 {
@@ -293,7 +293,7 @@ namespace HRD
 
                     foreach (var item in currentRowNodes)
                     {
-                        result += CalcOneNodeRoute(map, item);
+                        result.AddRange(CalcOneNodeRoute(map, item));
                         tarNum.Remove(item);
                     }
 
@@ -305,7 +305,7 @@ namespace HRD
                     }
                     foreach (var item in currentColNodes)
                     {
-                        result += CalcOneNodeRoute(map, item);
+                        result.AddRange(CalcOneNodeRoute(map, item));
                         tarNum.Remove(item);
                     }
                     currentRow--;
@@ -313,22 +313,22 @@ namespace HRD
                 }
                 foreach (var item in tarNum)
                 {
-                    result += CalcOneNodeRoute(map, item);
+                    result.AddRange(CalcOneNodeRoute(map, item));
                 }
                 return result;
             });
             RouteNum = await routeString;
-            var route = RouteNum.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
-            OutPutJson.stepCount = route.Length;
+            //var route = RouteNum.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
+            OutPutJson.stepCount = RouteNum.Count;
             OutPutJson.duration = (int)(sw.ElapsedMilliseconds / 1000);
             textBox1.Text = OutPutJson.stepList;
             OutPutJsonResult();
             sw.Stop();
             textBox2.Text = $"计算耗时：{sw.ElapsedMilliseconds} 毫秒\r\n";
-            textBox2.Text += $"共需 {route.Length} 步";
+            textBox2.Text += $"共需 {RouteNum.Count} 步";
         }
 
-        private string CalcOneNodeRoute(CalcPath map, int node)
+        private List<int> CalcOneNodeRoute(CalcPath map, int node)
         {
             var targetPos = new NodePos
             {
@@ -339,7 +339,7 @@ namespace HRD
             if (itemNode.X == targetPos.X && itemNode.Y == targetPos.Y)
             {
                 itemNode.Fixed = true;
-                return string.Empty;
+                return new List<int>();
             }
             var route = map.CalcRoute(node, targetPos);
             char[] routeStr = route.Select(e => (char)((e.X * ColCount) + e.Y)).ToArray();
@@ -380,13 +380,12 @@ namespace HRD
                 listNum.Add(int.Parse(button.Text));
             }
             var map = new CalcPath(listNum, RowCount, ColCount);
-            var route = RouteNum.Split(",").Where(e => !string.IsNullOrEmpty(e)).ToArray();
+            var route = RouteNum;
             foreach (var item in route)
             {
-                var num = Convert.ToInt32(item);
                 var spaceNode = Map.First(e => e.Text == 0);
                 var spaceBtn = _buttons[spaceNode.X, spaceNode.Y];
-                var currentNode = Map.First(e => e.Text == num);
+                var currentNode = Map.First(e => e.Text == item);
                 var currentBtn = _buttons[currentNode.X, currentNode.Y];
                 Swap(spaceBtn, currentBtn);
                 (spaceNode.X, currentNode.X) = (currentNode.X, spaceNode.X);

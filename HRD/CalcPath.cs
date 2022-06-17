@@ -160,84 +160,14 @@ namespace HRD
             return result;
         }
 
-        //public string CalcSpaceRoute(List<NodePos> nodeMoveRoute)
-        //{
-        //    var spaceStart = Form1.Map.First(e => e.Text == 0);
-        //    var firstNode = Form1.Map.First(e => e.X == nodeMoveRoute[0].X && e.Y == nodeMoveRoute[0].Y);
-        //    var firstText = firstNode.Text;
-        //    firstNode.Fixed = true;
-        //    nodeMoveRoute.Remove(nodeMoveRoute.First());
-        //    var result = string.Empty;
-        //    while (nodeMoveRoute.Count > 0)
-        //    {
-        //        var currentEndNode = nodeMoveRoute.First();
-        //        nodeMoveRoute.Remove(currentEndNode);
-        //        var currentRoute = new List<NodePos>();
-        //        if (currentEndNode.X * Form1.ColCount + currentEndNode.Y == firstText - 1
-        //            && currentEndNode.Y == Form1.ColCount - 1
-        //            && nodeMoveRoute.Count == 0
-        //            && currentEndNode.X != spaceStart.X && currentEndNode.Y != spaceStart.Y)
-        //        {
-        //            currentRoute.AddRange(CalcRoute(0, new NodePos
-        //            {
-        //                X = currentEndNode.X + 1,
-        //                Y = 0
-        //            }));
-        //            if (currentRoute.Any())
-        //            {
-        //                foreach (var item in currentRoute)
-        //                {
-        //                    result += MoveSpace(item);
-        //                }
-        //                currentRoute.Clear();
-        //            }
-        //            currentRoute.AddRange(CalcSpecialRoute1(currentEndNode.X));
-        //        }
-        //        else if (currentEndNode.X == Form1.RowCount - 1 
-        //            && currentEndNode.Y == Form1.ColCount - 1
-        //            && spaceStart.X == currentEndNode.X
-        //            && spaceStart.Y == 0)
-        //        {
-        //            firstNode = Form1.Map.First(e => e.Text == firstText);
-        //            if (firstNode.X == currentEndNode.X)
-        //            {
-        //                currentRoute.AddRange(CalcSpecialRoute2(currentEndNode.X - 1));
-        //                nodeMoveRoute.Clear();
-        //            }
-        //        }
-        //        else if (currentEndNode.Y < Form1.ColCount - 2 
-        //            && currentEndNode.X == spaceStart.X -1 && currentEndNode.Y == spaceStart.Y + 1)
-        //        {
-        //            firstNode = Form1.Map.First(e => e.Text == firstText);
-        //            var lastNode = Form1.Map.First(e => e.Text == firstText - 1);
-        //            if (lastNode.X == currentEndNode.X && lastNode.Y == currentEndNode.Y - 1)
-        //            {
-        //                currentRoute.AddRange(CalcSpecialRoute3(currentEndNode.X - 1));
-        //                nodeMoveRoute.Clear();
-        //            }
-        //        }
-        //        else
-        //        {
-        //            currentRoute = CalcRoute(0, currentEndNode);
-        //        }
-        //        foreach (var item in currentRoute)
-        //        {
-        //            result += MoveSpace(item);
-        //        }
-                
-        //        result += MoveSpace(new NodePos { X = firstNode.X, Y = firstNode.Y});
-        //    }
-        //    return result;
-        //}
-
-        public string CalcSpaceRoute(List<NodePos> nodeMoveRoute)
+        public List<int> CalcSpaceRoute(List<NodePos> nodeMoveRoute)
         {
             var spaceStart = Form1.Map.First(e => e.Text == 0);
             var firstNode = Form1.Map.First(e => e.X == nodeMoveRoute[0].X && e.Y == nodeMoveRoute[0].Y);
             var firstText = firstNode.Text;
             firstNode.Fixed = true;
             nodeMoveRoute.Remove(nodeMoveRoute.First());
-            var result = string.Empty;
+            var result = new List<int>();
             while (nodeMoveRoute.Count > 0)
             {
                 var currentEndNode = nodeMoveRoute.First();
@@ -259,7 +189,7 @@ namespace HRD
                     {
                         foreach (var item in currentRoute)
                         {
-                            result += MoveSpace(item);
+                            result.AddRange(MoveSpace(item));
                         }
                         currentRoute.Clear();
                     }
@@ -281,7 +211,7 @@ namespace HRD
                     {
                         foreach (var item in currentRoute)
                         {
-                            result += MoveSpace(item);
+                            result.AddRange(MoveSpace(item));
                         }
                         currentRoute.Clear();
                     }
@@ -293,13 +223,14 @@ namespace HRD
                 }
                 foreach (var item in currentRoute)
                 {
-                    result += MoveSpace(item);
+                    result.AddRange(MoveSpace(item));
                 }
 
-                result += MoveSpace(new NodePos { X = firstNode.X, Y = firstNode.Y });
+                result.AddRange(MoveSpace(new NodePos { X = firstNode.X, Y = firstNode.Y }));
             }
             return result;
         }
+
 
         public List<NodePos> CalcSpecialRoute3(int moveRowNo)
         {
@@ -521,9 +452,9 @@ namespace HRD
             return result;
         }
 
-        public string MoveSpace(NodePos nextNode)
+        public List<int> MoveSpace(NodePos nextNode)
         {
-            var result = string.Empty;
+            var result = new List<int>();
             var nextNodeInfo = Form1.Map.First(e => e.X == nextNode.X && e.Y == nextNode.Y);
             var spaceNodeInfo = Form1.Map.First(e => e.Text == 0);
             //判断与空白按钮是否相邻，如果是，交换
@@ -585,7 +516,7 @@ namespace HRD
                 }
                 (spaceNodeInfo.X, nextNodeInfo.X) = (nextNodeInfo.X, spaceNodeInfo.X);
                 (spaceNodeInfo.Y, nextNodeInfo.Y) = (nextNodeInfo.Y, spaceNodeInfo.Y);
-                result = nextNodeInfo.Text.ToString() + ",";
+                result.Add(nextNodeInfo.Text);
             }
             return result;
         }
