@@ -342,7 +342,7 @@ namespace HRD
                 return new List<int>();
             }
             var route = map.CalcRoute(node, targetPos);
-            char[] routeStr = route.Select(e => (char)((e.X * ColCount) + e.Y)).ToArray();
+            //char[] routeStr = route.Select(e => (char)((e.X * ColCount) + e.Y)).ToArray();
             var result = map.CalcSpaceRoute(route);
             //textBox1.Text += result;
             return result;

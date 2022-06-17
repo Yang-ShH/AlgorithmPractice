@@ -33,52 +33,34 @@ namespace HRD
         /// 搜索邻近节点（顺序：上左下右）
         /// </summary>
         /// <param name="currentNode"></param>
-        private List<int> CalcOptionalNodes(NodeInfo currentNode)
+        private void CalcOptionalNodes(NodeInfo currentNode)
         {
-            var result = new List<int>();
             var currentX = currentNode.X;
             var currentY = currentNode.Y;
             var upX = currentX - 1;
             if (upX >= 0)
             {
                 var nextNode = Form1.Map.First(e => e.X == upX && e.Y == currentY);
-                var seccess = AddNextNode(currentNode, nextNode);
-                if (seccess)
-                {
-                    result.Add(nextNode.Text);
-                }
+                AddNextNode(currentNode, nextNode);
             }
             var leftY = currentY - 1;
             if (leftY >= 0)
             {
                 var nextNode = Form1.Map.First(e => e.X == currentX && e.Y == leftY);
-                var seccess = AddNextNode(currentNode, nextNode);
-                if (seccess)
-                {
-                    result.Add(nextNode.Text);
-                }
+                AddNextNode(currentNode, nextNode);
             }
             var downX = currentX + 1;
             if (downX < Form1.RowCount)
             {
                 var nextNode = Form1.Map.First(e => e.X == downX && e.Y == currentY);
-                var seccess = AddNextNode(currentNode, nextNode);
-                if (seccess)
-                {
-                    result.Add(nextNode.Text);
-                }
+                AddNextNode(currentNode, nextNode);
             }
             var rightY = currentY + 1;
             if (rightY < Form1.ColCount)
             {
                 var nextNode = Form1.Map.First(e => e.X == currentX && e.Y == rightY);
-                var seccess = AddNextNode(currentNode, nextNode);
-                if (seccess)
-                {
-                    result.Add(nextNode.Text);
-                }
+                AddNextNode(currentNode, nextNode);
             }
-            return result;
         }
         /// <summary>
         /// 添加下一可选节点
@@ -125,7 +107,7 @@ namespace HRD
                 while (OptionalNodes.Count > 0)
                 {
                     var node = OptionalNodes.First();
-                    var nextNum = CalcOptionalNodes(node);
+                    CalcOptionalNodes(node);
                     
                     OptionalNodes.Remove(node);
                     WalkedNodes.Add(node);
