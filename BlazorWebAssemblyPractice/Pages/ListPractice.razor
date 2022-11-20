@@ -1,0 +1,75 @@
+﻿@page "/ListPractice"
+@using BlazorWebAssemblyPractice.Models
+
+<h3>ListPractice</h3>
+
+<main role="main" class="pb-3">
+
+    <style>
+        .table td, .table th {
+            padding: 0.5rem !important;
+        }
+
+        .form-control {
+            width: auto;
+        }
+    </style>
+
+    <p>
+        查询条件:
+        <input class="form-control" id="searchString1" name="searchString1" style="display:inline" type="text" value="">
+        <input class="form-control" id="searchString1" name="searchString1" style="display:inline" type="text" value="">
+        <input type="submit" class="btn btn-primary" value="查询">
+        @*<a href="/CreateCommodity">创建Commodity</a>*@
+    </p>
+    <div id="partialajaxlist" style="width:100%">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <th>Task Id</th>
+                    <th>Operator</th>
+                    <th>Create Time</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (TaskLog taskLog in TaskLogList)
+                {
+                    <tr>
+                        <td>@taskLog.Id</td>
+                        <td>@taskLog.TaskId</td>
+                        <td>@taskLog.Operator</td>
+                        <td>@taskLog.CreateTime</td>
+                        <td>
+                            <a href="@($"TaskDetail/{taskLog.Id}")" class="btn btn-primary btn-sm">
+                                详情
+                            </a>
+                            |
+                            <a href="@($"EditTask/{taskLog.Id}")" class="btn btn-primary btn-sm">
+                                编辑
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+
+@code {
+    private List<TaskLog> TaskLogList = new List<TaskLog>();
+
+    protected override Task OnInitializedAsync()
+    {
+        for (int i = 1; i < 6; i++)
+        {
+            TaskLogList.Add(new TaskLog
+            {
+                Id = i,
+                TaskId = Guid.NewGuid().ToString(),
+                Operator = $"person_{i}",
+                CreateTime = DateTime.Now
+            });
+        }
+        return base.OnInitializedAsync();
+    }
+}
