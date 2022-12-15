@@ -1,0 +1,90 @@
+﻿@inherits LayoutComponentBase
+
+<MApp>
+    <MAppBar Flat Color="white" Class="m-bar--underline" App>
+        <MAppBarNavIcon @onclick="()=>_mini=!_mini"></MAppBarNavIcon>
+
+        <MToolbarTitle></MToolbarTitle>
+
+        <MSpacer></MSpacer>
+
+        <MButton Icon>
+            <MIcon>mdi-heart</MIcon>
+        </MButton>
+
+        <MButton icon>
+            <MIcon>mdi-magnify</MIcon>
+        </MButton>
+
+        <MMenu Left
+               Bottom>
+            <ActivatorContent>
+                <MButton Icon @attributes="@context.Attrs">
+                    <MIcon>mdi-dots-vertical</MIcon>
+                </MButton>
+            </ActivatorContent>
+            <ChildContent>
+                <MList>
+                    @for (var i = 0; i < 5; i++)
+                    {
+                        var n = i + 1;
+                        <MListItem @key="n"
+                               OnClick="() => {}">
+                            <MListItemTitle>Option @n</MListItemTitle>
+                        </MListItem>
+                    }
+                </MList>
+            </ChildContent>
+        </MMenu>
+    </MAppBar>
+    <MNavigationDrawer @bind-Value="_drawer" @bind-MiniVariant="_mini" Permanent App>
+        <MListItem Style="height:64px">
+            <MListItemContent>
+                <MListItemTitle Style="text-align: -webkit-center">
+                    <img src="https://cdn.masastack.com/stack/images/website/masa-blazor/logo.png" />
+                </MListItemTitle>
+            </MListItemContent>
+        </MListItem>
+        <MList Dense
+               Nav>
+            @foreach (var item in _items)
+            {
+                <MListItem Link Href="@item.Link">
+                    <MListItemIcon>
+                        <MIcon>@item.Icon</MIcon>
+                    </MListItemIcon>
+
+                    <MListItemContent>
+                        <MListItemTitle>@item.Title</MListItemTitle>
+                    </MListItemContent>
+                </MListItem>
+            }
+        </MList>
+    </MNavigationDrawer>
+    <MMain>
+        <MContainer Fluid>
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
+        </MContainer>
+    </MMain>
+</MApp>
+
+@code{
+    private bool _drawer = true;
+    private bool _mini = true;
+
+    class Item
+    {
+        public string Title { get; set; }
+        public string Icon { get; set; }
+        public string Link { get; set; }
+    }
+
+    private Item[] _items = new Item[]
+    {
+        new Item{ Title= "Dashboard", Icon= "mdi-view-dashboard", Link = "/" },
+        new Item { Title= "Photos", Icon= "mdi-image", Link = "counter"},
+        new Item { Title= "About", Icon= "mdi-help-box", Link = "fetchdata" }
+    };
+}
